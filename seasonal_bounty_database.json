@@ -10,5 +10,17 @@
     "vegetation_class":"Wet eucalypt forest and woodland",
     "berry_availability":"0,1,2,2,2,1,0,0,0,0,0,0",
     "leaf_availability":"2,2,2,2,2,2,2,2,2,2,2,2"
+  },
+  {
+    "scientific_name":"Atherosperma moschatum",
+    "common_name":"Tasmanian sassafras",
+    "edible_parts":"Leaf",
+    "preparation_notes":"Tea",
+    "image_filename":"atherosperma_moschatum.jpg",
+    "toxicity_warning":"Toxic",
+    "cultural_notes":"Indigenous name: truyina",
+    "vegetation_class":"Wet eucalypt forest and woodland",
+    "berry_availability":"0,0,0,0,0,0,0,0,0,0,0,0",
+    "leaf_availability":"2,2,2,2,2,2,2,2,2,2,2,2"
   }
 ]
