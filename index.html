@@ -165,17 +165,38 @@
       });
     });
 
-    // Get user's location
     function useMyLocation(callback) {
       if (!navigator.geolocation) {
-        alert("Geolocation not supported.");
+        alert("Geolocation is not supported by your browser.");
         return;
       }
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        const coords = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
-        document.getElementById("location").value = coords;
-        if (callback) callback(coords);
+
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const locString = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+        document.getElementById("location").value = locString;
+
+        // Load the vegetation polygons
+        fetch("tasveg_simplified.geojson")
+          .then(res => res.json())
+          .then(geojson => {
+            const point = turf.point([longitude, latitude]);
+
+            const match = geojson.features.find(feature =>
+              turf.booleanPointInPolygon(point, feature)
+            );
+
+            const vegClass = match ? match.properties.veg_class || match.properties.VEG_CLASS : "Unknown";
+
+            // Optional: auto-select matching veg class in dropdown
+            const vegSelect = document.getElementById("vegetation");
+            Array.from(vegSelect.options).forEach(opt => {
+              opt.selected = opt.value === vegClass;
+            });
+
+            console.log(`Detected vegetation class: ${vegClass}`);
+            if (callback) callback(locString);
+          });
       }, () => {
         alert("Unable to retrieve your location.");
       });
