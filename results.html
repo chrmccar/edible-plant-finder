@@ -57,6 +57,7 @@
   <script>
     window.onload = () => {
       const location = localStorage.getItem("lastSearchLocation") || "N/A";
+      const vegFromLocation = localStorage.getItem("lastSearchVegFromLocation") || "";
       const vegetation = JSON.parse(localStorage.getItem("lastSearchVegetation") || "[]");
       const parts = JSON.parse(localStorage.getItem("lastSearchParts") || "[]");
       const date = localStorage.getItem("lastSearchDate") || "N/A";
@@ -66,7 +67,7 @@
       if (vegetation.length > 0) {
         summaryLines.push(`Vegetation: ${vegetation.join(", ")}`);
       } else {
-        summaryLines.push(`Location: ${location}`);
+        summaryLines.push(`Location: ${location} ${vegFromLocation ? `(${vegFromLocation})` : ""}`);
       }
 
       summaryLines.push(`Edible Parts: ${parts.length > 0 ? parts.join(", ") : "Any"}`);

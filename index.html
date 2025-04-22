@@ -176,7 +176,7 @@
         const locString = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
         document.getElementById("location").value = locString;
 
-        // Load the vegetation polygons
+        // Load vegetation polygons
         fetch("tasveg_simplified.geojson")
           .then(res => res.json())
           .then(geojson => {
@@ -188,13 +188,16 @@
 
             const vegClass = match ? match.properties.veg_class || match.properties.VEG_CLASS : "Unknown";
 
-            // Optional: auto-select matching veg class in dropdown
+            // Store both lat/lon and veg info
+            localStorage.setItem("lastSearchLocation", locString);
+            localStorage.setItem("lastSearchVegFromLocation", vegClass);
+
+            // Optionally auto-select veg
             const vegSelect = document.getElementById("vegetation");
             Array.from(vegSelect.options).forEach(opt => {
               opt.selected = opt.value === vegClass;
             });
 
-            console.log(`Detected vegetation class: ${vegClass}`);
             if (callback) callback(locString);
           });
       }, () => {
