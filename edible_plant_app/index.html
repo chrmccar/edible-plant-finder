@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seasonal Edible Plant Finder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f0f9f4, #d6ece1);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #2f4f4f;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.25rem;
+      font-weight: bold;
+      color: #444;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #3a7d60;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #2e6b51;
+    }
+    .inline-button {
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      text-align: right;
+      color: #2e6b51;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+    .select-like {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .select-like div {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background-color: #f8f8f8;
+      cursor: pointer;
+      user-select: none;
+    }
+    .select-like div.selected {
+      background-color: #3a7d60;
+      color: white;
+      border-color: #3a7d60;
+    }
+    .divider {
+      text-align: center;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #666;
+    }
+    select[multiple] {
+      border-radius: 8px;
+      height: auto;
+      min-height: 6rem;
+    }
+    select[multiple] option:checked {
+      background-color: #3a7d60;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Find Edible Plants Near You</h1>
+
+    <button onclick="quickSearch()">🌿 Quick Search</button>
+
+    <div class="divider">or advanced search</div>
+
+    <label for="location">Your Location</label>
+    <input type="text" id="location" placeholder="e.g., Taroona or -42.96, 147.35" />
+    <button class="inline-button" onclick="useMyLocation()">📍 Use my current location</button>
+
+    <label for="vegetation">Vegetation Community (optional)</label>
+    <select id="vegetation" multiple size="6">
+      <option value="Modified Land">Modified Land</option>
+      <option value="Dry eucalypt forest and woodland">Dry eucalypt forest and woodland</option>
+      <option value="Highland treeless vegetation">Highland treeless vegetation</option>
+      <option value="Moorland, sedgeland and rushland">Moorland, sedgeland and rushland</option>
+      <option value="Native grassland">Native grassland</option>
+      <option value="Non-eucalypt forest and woodland">Non-eucalypt forest and woodland</option>
+      <option value="Other natural environments">Other natural environments</option>
+      <option value="Rainforest and related scrub">Rainforest and related scrub</option>
+      <option value="Saltmarsh and wetland">Saltmarsh and wetland</option>
+      <option value="Scrub, heathland and coastal complexes">Scrub, heathland and coastal complexes</option>
+      <option value="Wet eucalypt forest and woodland">Wet eucalypt forest and woodland</option>
+    </select>
+
+    <label>Edible Part(s)</label>
+    <div id="edible-options" class="select-like">
+      <div data-value="leaves">Leaves</div>
+      <div data-value="berry">Berry</div>
+      <div data-value="tubers">Tubers</div>
+      <div data-value="flowers">Flowers</div>
+      <div data-value="seeds">Seeds</div>
+      <div data-value="shoots">Shoots</div>
+    </div>
+
+    <label for="date">Date</label>
+    <input type="date" id="date" />
+
+    <button onclick="searchPlants()">Search</button>
+  </div>
+
+  <script>
+    // Fill in today's date on load
+    window.onload = () => {
+      const now = new Date();
+      document.getElementById("date").value = now.toISOString().split("T")[0];
+    };
+
+    // Toggle edible parts
+    document.querySelectorAll("#edible-options div").forEach(option => {
+      option.addEventListener("click", () => {
+        option.classList.toggle("selected");
+      });
+    });
+
+    // Get user's location
+    function useMyLocation(callback) {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        const coords = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+        document.getElementById("location").value = coords;
+        if (callback) callback(coords);
+      }, () => {
+        alert("Unable to retrieve your location.");
+      });
+    }
+
+    function storeAndRedirect(location, parts, vegetation, date) {
+      localStorage.setItem("lastSearchLocation", location);
+      localStorage.setItem("lastSearchParts", JSON.stringify(parts));
+      localStorage.setItem("lastSearchVegetation", JSON.stringify(vegetation));
+      localStorage.setItem("lastSearchDate", date);
+
+      console.log("Saving to localStorage:", {
+        location,
+        parts,
+        vegetation,
+        date
+      });
+
+      window.location.href = "results.html";
+    }
+
+    function searchPlants() {
+      const location = document.getElementById("location").value;
+      const parts = Array.from(document.querySelectorAll("#edible-options .selected"))
+        .map(div => div.getAttribute("data-value"));
+      const vegetation = Array.from(document.getElementById("vegetation").selectedOptions)
+        .map(option => option.value);
+      const date = document.getElementById("date").value;
+
+      storeAndRedirect(location, parts, vegetation, date);
+    }
+
+    function quickSearch() {
+      const now = new Date().toISOString().split("T")[0];
+      useMyLocation((location) => {
+        const allParts = ["leaves", "berry", "tubers", "flowers", "seeds", "shoots"];
+        storeAndRedirect(location, allParts, [], now);
+      });
+    }
+  </script>
+</body>
+</html>
