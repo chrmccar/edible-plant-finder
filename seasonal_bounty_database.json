@@ -2,11 +2,13 @@
   {
     "scientific_name":"Tasmannia lanceolata",
     "common_name":"Mountain Pepper",
-    "edible_parts":"Berry",
-    "preparation_notes":"Cook",
+    "edible_parts":"Berry, Leaf",
+    "preparation_notes":"Berries turn black when ripe",
     "image_filename":"tasmannia_lanceolata.jpg",
     "toxicity_warning":null,
     "cultural_notes":"Indigenous name: tapu",
-    "vegetation_class":"Wet eucalypt forest and woodland"
+    "vegetation_class":"Wet eucalypt forest and woodland",
+    "berry_availability":"0,1,2,2,2,1,0,0,0,0,0,0",
+    "leaf_availability":"2,2,2,2,2,2,2,2,2,2,2,2"
   }
 ]

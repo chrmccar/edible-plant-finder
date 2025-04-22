@@ -111,7 +111,16 @@
     <input type="text" id="location" placeholder="e.g., Taroona or -42.96, 147.35" />
     <button class="inline-button" onclick="useMyLocation()">📍 Use my current location</button>
 
-    <label for="vegetation">Vegetation Community (optional)</label>
+    <p style="font-size: 0.85rem; color: #666; margin-top: -0.75rem; margin-bottom: 0.5rem;">
+      You can type a location <strong>or</strong> select a vegetation community below — not both.
+    </p>    
+
+    <label for="vegetation">
+      Vegetation Community <span style="font-weight: normal; font-size: 0.85rem; color: #666;">
+        (leave this blank if using location)
+      </span>
+    </label>
+
     <select id="vegetation" multiple size="6">
       <option value="Modified Land">Modified Land</option>
       <option value="Dry eucalypt forest and woodland">Dry eucalypt forest and woodland</option>
