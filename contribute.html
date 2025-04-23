@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contribute a Plant</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4faf6;
+      margin: 0;
+      padding: 2rem;
+      color: #2f4f4f;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #3a7d60;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.25rem 0 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #3a7d60;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2e6b51;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Contribute a New Edible Plant</h1>
+    <p class="note">Your submission will be reviewed before appearing in the database.</p>
+
+    <form action="https://formspree.io/f/xwpokojv" method="POST">
+      <label for="scientific_name">Scientific Name</label>
+      <input type="text" id="scientific_name" name="scientific_name" required />
+
+      <label for="common_name">Common Name</label>
+      <input type="text" id="common_name" name="common_name" required />
+
+      <label for="vegetation_class">Vegetation Community</label>
+      <input type="text" id="vegetation_class" name="vegetation_class" placeholder="e.g. Wet eucalypt forest and woodland" required />
+
+      <label for="edible_parts">Edible Part(s)</label>
+      <input type="text" id="edible_parts" name="edible_parts" placeholder="e.g. berries, leaves" required />
+
+      <label for="preparation_notes">Preparation Notes</label>
+      <textarea id="preparation_notes" name="preparation_notes" rows="3"></textarea>
+
+      <label for="cultural_notes">Cultural Notes</label>
+      <textarea id="cultural_notes" name="cultural_notes" rows="3"></textarea>
+
+      <label for="availability">Seasonal Availability (notes or month list)</label>
+      <textarea id="availability" name="availability" rows="2"></textarea>
+
+      <button type="submit">Submit Plant</button>
+    </form>
+  </div>
+</body>
+</html>

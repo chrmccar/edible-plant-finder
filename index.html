@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seasonal Edible Plant Finder</title>
@@ -103,20 +104,24 @@
   <div class="container">
     <h1>Find Edible Plants Near You</h1>
 
+    <h1>Find Edible Plants Near You</h1>
+
+    <p style="text-align: center; margin-bottom: 1.5rem;">
+      <a href="contribute.html" style="font-size: 1rem; color: #3a7d60; text-decoration: underline;">
+        🌱 Contribute a New Plant
+      </a>
+    </p>
+    
     <button onclick="quickSearch()">🌿 Quick Search</button>
 
     <div class="divider">or advanced search</div>
 
-    <label for="location">Your Location</label>
+    <label for="location">Search by Location</label>
     <input type="text" id="location" placeholder="e.g., Taroona or -42.96, 147.35" />
-    <button class="inline-button" onclick="useMyLocation()">📍 Use my current location</button>
-
-    <p style="font-size: 0.85rem; color: #666; margin-top: -0.75rem; margin-bottom: 0.5rem;">
-      You can type a location <strong>or</strong> select a vegetation community below — not both.
-    </p>    
+    <button class="inline-button" onclick="useMyLocation()">Use my current location</button>
 
     <label for="vegetation">
-      Vegetation Community <span style="font-weight: normal; font-size: 0.85rem; color: #666;">
+      Search by Vegetation Community <span style="font-weight: normal; font-size: 0.85rem; color: #666;">
         (leave this blank if using location)
       </span>
     </label>
@@ -172,38 +177,40 @@
       }
 
       navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        const locString = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const locString = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
         document.getElementById("location").value = locString;
 
-        // Load vegetation polygons
         fetch("tasveg_simplified.geojson")
           .then(res => res.json())
           .then(geojson => {
-            const point = turf.point([longitude, latitude]);
+            const point = turf.point([lon, lat]);
+            let vegClass = "Unknown";
 
-            const match = geojson.features.find(feature =>
-              turf.booleanPointInPolygon(point, feature)
-            );
+            for (const feature of geojson.features) {
+              if (turf.booleanPointInPolygon(point, feature)) {
+                vegClass = feature.properties.veg_class || feature.properties.VEG_GROUP || "Unknown";
+                break;
+              }
+            }
 
-            const vegClass = match ? match.properties.veg_class || match.properties.VEG_CLASS : "Unknown";
-
-            // Store both lat/lon and veg info
-            localStorage.setItem("lastSearchLocation", locString);
             localStorage.setItem("lastSearchVegFromLocation", vegClass);
-
-            // Optionally auto-select veg
-            const vegSelect = document.getElementById("vegetation");
-            Array.from(vegSelect.options).forEach(opt => {
-              opt.selected = opt.value === vegClass;
-            });
+            console.log("🌱 Vegetation at your location:", vegClass);
 
             if (callback) callback(locString);
+          })
+          .catch(err => {
+            console.error("Failed to load vegetation map:", err);
+            localStorage.setItem("lastSearchVegFromLocation", "Unknown");
           });
+
       }, () => {
         alert("Unable to retrieve your location.");
       });
     }
+
+
 
     function storeAndRedirect(location, parts, vegetation, date) {
       localStorage.setItem("lastSearchLocation", location);
