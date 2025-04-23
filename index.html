@@ -98,12 +98,32 @@
       background-color: #3a7d60;
       color: white;
     }
+    .location-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .location-row input {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .location-button {
+      padding: 0.75rem 1rem;
+      background-color: #3a7d60;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    .location-button:hover {
+      background-color: #2e6b51;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Find Edible Plants Near You</h1>
-
     <h1>Find Edible Plants Near You</h1>
 
     <p style="text-align: center; margin-bottom: 1.5rem;">
@@ -117,8 +137,10 @@
     <div class="divider">or advanced search</div>
 
     <label for="location">Search by Location</label>
-    <input type="text" id="location" placeholder="e.g., Taroona or -42.96, 147.35" />
-    <button class="inline-button" onclick="useMyLocation()">Use my current location</button>
+    <div class="location-row">
+      <input type="text" id="location" placeholder="e.g., Taroona or -42.96, 147.35" />
+      <button type="button" class="location-button" onclick="useMyLocation()">📍</button>
+    </div>    
 
     <label for="vegetation">
       Search by Vegetation Community <span style="font-weight: normal; font-size: 0.85rem; color: #666;">
